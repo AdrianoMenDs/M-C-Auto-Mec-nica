@@ -177,6 +177,16 @@
     background: var(--orange); border-color: var(--orange);
   }
   .link-primary:hover { background: #ea6c0a; }
+  .link-primary.fechado-wa {
+    background: var(--bg-3) !important;
+    border-color: var(--border) !important;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .link-primary.fechado-wa .link-label { color: var(--text-2) !important; }
+  .link-primary.fechado-wa .link-sub { color: var(--text-3) !important; }
+  .link-primary.fechado-wa .link-arr { color: var(--text-3) !important; }
+  .link-primary.fechado-wa .link-icon { background: rgba(255,255,255,0.05) !important; }
   .link-primary .link-icon { background: rgba(0,0,0,0.15); }
   .link-primary .link-label { color: white; }
   .link-primary .link-sub { color: rgba(255,255,255,0.6); }
@@ -428,13 +438,13 @@
 
   <!-- LINKS -->
   <div class="links">
-    <a href="https://wa.me/5524999752933?text=Olá!%20Vi%20o%20perfil%20da%20M%26C%20Auto%20Mecânica%20e%20gostaria%20de%20mais%20informações!" target="_blank" class="link-btn link-primary">
+    <a id="btnWhatsApp" href="https://wa.me/5524999752933?text=Olá!%20Vi%20o%20perfil%20da%20M%26C%20Auto%20Mecânica%20e%20gostaria%20de%20mais%20informações!" target="_blank" class="link-btn link-primary">
       <div class="link-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       </div>
       <div class="link-text">
-        <span class="link-label">Falar no WhatsApp</span>
-        <span class="link-sub">(24) 99975-2933</span>
+        <span class="link-label" id="waLabel">Falar no WhatsApp</span>
+        <span class="link-sub" id="waSub">(24) 99975-2933</span>
       </div>
       <span class="link-arr">→</span>
     </a>
@@ -503,7 +513,7 @@
       </div>
       <iframe
         class="map-embed"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d458.3283011543156!2d-44.72083918334175!3d-23.2202817800935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9d6ddf1e2b7abd%3A0xae62d907d508142b!2sM%2FC%20oficina%20mec%C3%A2nica!5e0!3m2!1spt-BR!2sbr!4v1779678073540!5m2!1spt-BR!2sbr"
+        src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d770.8166276039397!2d-44.71947659062903!3d-23.219696728103123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e9!4m5!1s0x9da563fdc49b81%3A0xf6e88656c48349a3!2sMambucaba%2C%20Angra%20dos%20Reis%20-%20RJ!3m2!1d-22.9324591!2d-44.5313569!4m5!1s0x9d6d1f9b89d68f%3A0x3a8cc45a07fd1ced!2sPosto%20Paraty%2C%20Av.%20Roberto%20Silveira%2C%20S%2Fn%20-%20Pontal%2C%20Paraty%20-%20RJ%2C%2023970-000!3m2!1d-23.220130299999997!2d-44.7201624!5e0!3m2!1spt-BR!2sbr!4v1779656645649!5m2!1spt-BR!2sbr"
         allowfullscreen loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">
       </iframe>
@@ -590,6 +600,10 @@
     const msgFechado = document.getElementById('msgFechado');
     const status = estaAberto();
 
+    const waBtn = document.getElementById('btnWhatsApp');
+    const waLabel = document.getElementById('waLabel');
+    const waSub = document.getElementById('waSub');
+
     if (status.aberto) {
       badge.className = 'status-badge aberto';
       texto.textContent = 'Aberto agora';
@@ -597,24 +611,50 @@
       btn.disabled = false;
       btn.textContent = '🔧 Solicitar agendamento';
       msgFechado.style.display = 'none';
+      // WhatsApp — aberto
+      waBtn.classList.remove('fechado-wa');
+      waLabel.textContent = 'Falar no WhatsApp';
+      waSub.textContent = '(24) 99975-2933';
+      // Campos — aberto
+      document.getElementById('inp-servico').disabled = false;
+      document.getElementById('inp-data').disabled = false;
+      document.getElementById('inp-servico').style.opacity = '1';
+      document.getElementById('inp-data').style.opacity = '1';
+      document.getElementById('inp-servico').style.cursor = 'pointer';
+      document.getElementById('inp-data').style.cursor = 'pointer';
     } else {
       badge.className = 'status-badge fechado';
       texto.textContent = 'Fechado agora';
       let msg = '';
+      let retorno = '';
       if (status.motivo === 'domingo') {
         msg = 'Estamos fechados aos domingos. Voltamos na Segunda às 8h.';
         horario.textContent = 'Fechado aos domingos';
+        retorno = 'Abre Segunda às 8h';
       } else if (status.motivo === 'cedo') {
         msg = `Ainda não abrimos. Retornamos hoje às ${status.abre}:00h.`;
         horario.textContent = `Abrimos às ${status.abre}:00h`;
+        retorno = `Abre hoje às ${status.abre}:00h`;
       } else {
         msg = `Já encerramos por hoje. Voltamos ${status.proximoDia} às 8:00h.`;
         horario.textContent = `Retornamos ${status.proximoDia} às 8:00h`;
+        retorno = `Abre ${status.proximoDia} às 8:00h`;
       }
       btn.disabled = true;
       btn.innerHTML = '🔒 Agendamento indisponível';
       msgFechado.style.display = 'block';
       msgFechado.textContent = msg;
+      // WhatsApp — fechado
+      waBtn.classList.add('fechado-wa');
+      waLabel.textContent = '🔒 WhatsApp indisponível';
+      waSub.textContent = retorno;
+      // Campos — fechado
+      document.getElementById('inp-servico').disabled = true;
+      document.getElementById('inp-data').disabled = true;
+      document.getElementById('inp-servico').style.opacity = '0.4';
+      document.getElementById('inp-data').style.opacity = '0.4';
+      document.getElementById('inp-servico').style.cursor = 'not-allowed';
+      document.getElementById('inp-data').style.cursor = 'not-allowed';
     }
   }
 
