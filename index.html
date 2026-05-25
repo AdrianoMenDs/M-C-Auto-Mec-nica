@@ -382,6 +382,21 @@
     cursor: pointer;
   }
 
+  /* Esconder scrollbar do Calendly */
+  .calendly-inline-widget iframe {
+    scrollbar-width: none !important;
+  }
+  .calendly-inline-widget iframe::-webkit-scrollbar {
+    display: none !important;
+  }
+  .calendly-inline-widget {
+    scrollbar-width: none !important;
+    overflow: hidden !important;
+  }
+  .calendly-inline-widget::-webkit-scrollbar {
+    display: none !important;
+  }
+
   @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
   .profile        { animation: fadeUp 0.45s ease both; }
   .services-section { animation: fadeUp 0.45s 0.1s ease both; }
@@ -466,35 +481,19 @@
     <div class="sec-label">Agendamento</div>
     <div class="form-card">
       <h2 class="form-title">Agende seu serviço</h2>
-      <p class="form-sub">Preencha e entraremos em contato pelo WhatsApp para confirmar.</p>
+      <p class="form-sub">Escolha o melhor dia e horário disponível. Confirmação automática!</p>
 
-      <div class="form-group">
-        <label class="form-label">Seu nome</label>
-        <input type="text" class="form-input" placeholder="Ex: João Silva" id="inp-nome">
-      </div>
-      <div class="form-group">
-        <label class="form-label">WhatsApp</label>
-        <input type="tel" class="form-input" placeholder="(24) XXXXX-XXXX" id="inp-tel">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Serviço desejado</label>
-        <select class="form-select" id="inp-servico">
-          <option value="" disabled selected>Selecione o serviço...</option>
-          <option>Mecânica em Geral</option>
-          <option>Instalação de Som</option>
-          <option>Instalação de Vidros Elétricos</option>
-          <option>Limpeza de Bico Injetor</option>
-          <option>Scanner Diagnóstico</option>
-          <option>Outro / Não sei ainda</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Data preferida</label>
-        <input type="date" class="form-input" id="inp-data">
+      <div id="calendly-wrap">
+        <!-- Calendly inline widget -->
+        <div class="calendly-inline-widget"
+          data-url="https://calendly.com/bmendes364/new-meeting?hide_landing_page_details=1&hide_event_type_details=1&hide_gdpr_banner=1&background_color=1f2127&text_color=f0ede8&primary_color=f97316"
+          style="min-width:100%;height:620px;">
+        </div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
       </div>
 
-      <button class="btn-agendar" id="btnAgendar" onclick="enviarAgendamento()">
-        🔧 Solicitar agendamento
+      <button class="btn-agendar" id="btnAgendar" style="margin-top:1rem;">
+        🗓️ Escolher Dia e Horário
       </button>
       <div class="form-fechado-msg" id="msgFechado"></div>
     </div>
@@ -513,7 +512,7 @@
       </div>
       <iframe
         class="map-embed"
-        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d229.16416826830945!2d-44.7201412749822!3d-23.220271470180656!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9d6ddf1e2b7abd%3A0xae62d907d508142b!2sM%2FC%20oficina%20mec%C3%A2nica!5e0!3m2!1spt-BR!2sbr!4v1779679948579!5m2!1spt-BR!2sbr"
+        src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d770.8166276039397!2d-44.71947659062903!3d-23.219696728103123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e9!4m5!1s0x9da563fdc49b81%3A0xf6e88656c48349a3!2sMambucaba%2C%20Angra%20dos%20Reis%20-%20RJ!3m2!1d-22.9324591!2d-44.5313569!4m5!1s0x9d6d1f9b89d68f%3A0x3a8cc45a07fd1ced!2sPosto%20Paraty%2C%20Av.%20Roberto%20Silveira%2C%20S%2Fn%20-%20Pontal%2C%20Paraty%20-%20RJ%2C%2023970-000!3m2!1d-23.220130299999997!2d-44.7201624!5e0!3m2!1spt-BR!2sbr!4v1779656645649!5m2!1spt-BR!2sbr"
         allowfullscreen loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">
       </iframe>
@@ -565,14 +564,8 @@
   };
 
   function estaAberto() {
-    const agora = new Date();
-    const dia = agora.getDay();
-    const hora = agora.getHours() + agora.getMinutes() / 60;
-    const h = HORARIOS[dia];
-    if (!h) return { aberto: false, motivo: 'domingo' };
-    if (hora < h.abre) return { aberto: false, motivo: 'cedo', abre: h.abre };
-    if (hora >= h.fecha) return { aberto: false, motivo: 'tarde', proximoDia: proximaAbertura(dia) };
-    return { aberto: true, fecha: h.fecha };
+    // MODO TESTE — sempre aberto
+    return { aberto: true, fecha: 18 };
   }
 
   function proximaAbertura(diaAtual) {
@@ -615,13 +608,10 @@
       waBtn.classList.remove('fechado-wa');
       waLabel.textContent = 'Falar no WhatsApp';
       waSub.textContent = '(24) 99975-2933';
-      // Campos — aberto
-      document.getElementById('inp-servico').disabled = false;
-      document.getElementById('inp-data').disabled = false;
-      document.getElementById('inp-servico').style.opacity = '1';
-      document.getElementById('inp-data').style.opacity = '1';
-      document.getElementById('inp-servico').style.cursor = 'pointer';
-      document.getElementById('inp-data').style.cursor = 'pointer';
+      // Calendly — aberto
+      document.getElementById('calendly-wrap').style.opacity = '1';
+      document.getElementById('calendly-wrap').style.pointerEvents = 'auto';
+      document.getElementById('btnAgendar').style.display = 'none';
     } else {
       badge.className = 'status-badge fechado';
       texto.textContent = 'Fechado agora';
@@ -648,50 +638,16 @@
       waBtn.classList.add('fechado-wa');
       waLabel.textContent = '🔒 WhatsApp indisponível';
       waSub.textContent = retorno;
-      // Campos — fechado
-      document.getElementById('inp-servico').disabled = true;
-      document.getElementById('inp-data').disabled = true;
-      document.getElementById('inp-servico').style.opacity = '0.4';
-      document.getElementById('inp-data').style.opacity = '0.4';
-      document.getElementById('inp-servico').style.cursor = 'not-allowed';
-      document.getElementById('inp-data').style.cursor = 'not-allowed';
+      // Calendly — fechado
+      document.getElementById('calendly-wrap').style.opacity = '0.3';
+      document.getElementById('calendly-wrap').style.pointerEvents = 'none';
+      document.getElementById('btnAgendar').style.display = 'none';
     }
-  }
-
-  // ─── AGENDAMENTO ─────────────────────────────────────────────────
-  function enviarAgendamento() {
-    const nome = document.getElementById('inp-nome').value.trim();
-    const tel = document.getElementById('inp-tel').value.trim();
-    const servico = document.getElementById('inp-servico').value;
-    const data = document.getElementById('inp-data').value;
-
-    if (!nome || !tel || !servico || !data) {
-      alert('Por favor, preencha todos os campos.');
-      return;
-    }
-
-    const dataFormatada = new Date(data + 'T12:00:00').toLocaleDateString('pt-BR');
-
-    const msg = encodeURIComponent(
-      `Olá! Quero agendar um serviço na M&C Auto Mecânica.\n\n` +
-      `👤 *Nome:* ${nome}\n` +
-      `📱 *WhatsApp:* ${tel}\n` +
-      `🔧 *Serviço:* ${servico}\n` +
-      `📅 *Data preferida:* ${dataFormatada}\n\n` +
-      `Aguardo a confirmação!`
-    );
-
-    window.open(`https://wa.me/5524999752933?text=${msg}`, '_blank');
-    document.getElementById('modal').classList.add('show');
   }
 
   function fecharModal() {
     document.getElementById('modal').classList.remove('show');
   }
-
-  // ─── DATA MÍNIMA (hoje) no campo data ───────────────────────────
-  const hoje = new Date().toISOString().split('T')[0];
-  document.getElementById('inp-data').min = hoje;
 
   // ─── INIT ────────────────────────────────────────────────────────
   atualizarStatus();
