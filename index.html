@@ -545,7 +545,7 @@
 
   <!-- RODAPÉ -->
   <div class="footer-bio">
-    <p>Página criada por <a href="https://amendesweb.com.br/" target="_blank">Adriano Mendes</a> · Desenvolvedor Web</p>
+    <p>Página criada por <a href="https://adriano-web-solutions.vercel.app" target="_blank">Adriano Mendes</a> · Desenvolvedor Web</p>
     <p style="margin-top:0.3rem;">Quer uma página assim? <a href="https://wa.me/5524999329190">Fale comigo →</a></p>
   </div>
 
@@ -575,8 +575,14 @@
   };
 
   function estaAberto() {
-    // MODO TESTE — sempre aberto
-    return { aberto: true, fecha: 18 };
+    const agora = new Date();
+    const dia = agora.getDay();
+    const hora = agora.getHours() + agora.getMinutes() / 60;
+    const h = HORARIOS[dia];
+    if (!h) return { aberto: false, motivo: 'domingo' };
+    if (hora < h.abre) return { aberto: false, motivo: 'cedo', abre: h.abre };
+    if (hora >= h.fecha) return { aberto: false, motivo: 'tarde', proximoDia: proximaAbertura(dia) };
+    return { aberto: true, fecha: h.fecha };
   }
 
   function proximaAbertura(diaAtual) {
